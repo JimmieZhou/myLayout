@@ -4,7 +4,7 @@
  * @Author: jimmiezhou
  * @Date: 2019-10-28 11:33:21
  * @LastEditors: jimmiezhou
- * @LastEditTime: 2019-10-28 14:31:41
+ * @LastEditTime: 2019-10-28 14:56:34
  -->
 # myLayout
 最近闲来无事，决定将页面布局这块东西做一个总结。前面三节都是比较简单的parent+son的页面结构，所以就不贴代码了，自行补脑吧。
@@ -284,3 +284,170 @@ img#son{vertical-align: middle;} /*默认是基线对齐，改为middle*/
 - 其次就是绝对居中，绝对定位设置top、left、right、bottom为0，然后margin:auto; 让浏览器自动平分边距以达到水平垂直居中的目的；
 - 如果是行内/行内块级/图片这些内容，可以优先考虑line-height和vertical-align 结合使用，不要忘了还有text-align ，这个方法代码其实不多，就是理解原理有点困难，想要熟练应对各种情况还需好好研究；
 - 移动端兼容性允许的情况下能用flex就用flex。
+
+## 四、两列布局
+### 4.1 左列定宽,右列自适应
+html:
+```html:
+<body>
+<div id="left">左列定宽</div>
+<div id="right">右列自适应</div>
+</body>
+```
+#### 4.1.1 利用float+margin实现
+```css
+#left {
+    background-color: #f00;
+    float: left;
+    width: 100px;
+    height: 500px;
+}
+#right {
+    background-color: #0f0;
+    height: 500px;
+    margin-left: 100px; /*大于等于#left的宽度*/
+}
+
+```
+#### 4.1.2 使用float+overflow实现
+```css
+#left {
+    background-color: #f00;
+    float: left;
+    width: 100px;
+    height: 500px;
+}
+#right {
+    background-color: #0f0;
+    height: 500px;
+    overflow: hidden; /*触发bfc达到自适应*/
+}
+```
+#### 4.1.3 使用绝对定位实现
+```css
+#parent{
+    position: relative;  /*子绝父相*/
+}
+#left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #f00;
+    width: 100px;
+    height: 500px;
+}
+#right {
+    position: absolute;
+    top: 0;
+    left: 100px;  /*值大于等于#left的宽度*/
+    right: 0;
+    background-color: #0f0;
+    height: 500px;
+}
+```
+#### 4.1.4 使用flex实现
+```css
+#parent{
+    width: 100%;
+    height: 500px;
+    display: flex;
+}
+#left {
+    width: 100px;
+    background-color: #f00;
+}
+#right {
+    flex: 1; /*均分了父元素剩余空间*/
+    background-color: #0f0;
+}
+```
+#### 4.1.5 grid实现
+```css 
+#parent {
+    width: 100%;
+    height: 500px;
+    display: grid;
+    grid-template-columns: 100px auto;  /*设定2列就ok了,auto换成1fr也行*/
+}
+#left {
+    background-color: #f00;
+}
+#right {
+    background-color: #0f0;
+}
+```
+### 4.2 一列不定,一列自适应
+html:
+```html
+<body>
+<div id="parent">
+    <div id="left">左列不定宽</div>
+    <div id="right">右列自适应</div>
+</div>
+</body>
+```
+#### 4.2.1 使用float+overflow实现
+```css
+#left {
+    margin-right: 10px;
+    float: left;  /*只设置浮动,不设宽度*/
+    height: 500px;
+    background-color: #f00;
+}
+#right {
+    overflow: hidden;  /*触发bfc*/
+    height: 500px;
+    background-color: #0f0;
+}
+```
+#### 4.2.2 使用flex实现
+```css
+#parent{
+    display: flex;
+}
+#left { /*不设宽度*/
+    margin-right: 10px;
+    height: 500px;
+    background-color: #f00;
+}
+#right {
+    height: 500px;
+    background-color: #0f0;
+    flex: 1;  /*均分#parent剩余的部分*/
+}
+```
+## 五、三列布局
+html:
+```html
+<body>
+<div id="parent">
+    <div id="left">左列定宽</div>
+    <div id="center">中间定宽</div>
+    <div id="right">右列自适应</div>
+</div>
+</body>
+```
+### 5.1使用float+margin实现
+```css
+#parent{
+    min-width: 310px; /*100+10+200,防止宽度不够,子元素换行*/
+}
+#left {
+    margin-right: 10px;  /*#left和#center间隔*/
+    float: left;
+    width: 100px;
+    height: 500px;
+    background-color: #f00;
+}
+#center{
+    float: left;
+    width: 200px;
+    height: 500px;
+    background-color: #eeff2b;
+}
+#right {
+    margin-left: 320px;  /*等于#left和#center的宽度之和加上间隔,多出来的就是#right和#center的间隔*/
+    height: 500px;
+    background-color: #0f0;
+}
+```
