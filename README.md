@@ -4,7 +4,7 @@
  * @Author: jimmiezhou
  * @Date: 2019-10-28 11:33:21
  * @LastEditors: jimmiezhou
- * @LastEditTime: 2019-10-28 13:57:20
+ * @LastEditTime: 2019-10-28 14:22:56
  -->
 # myLayout
 最近闲来无事，决定将页面布局这块东西做一个总结。前面三节都是比较简单的parent+son的页面结构，所以就不贴代码了，自行补脑吧。
@@ -71,8 +71,123 @@
 ```
 - 优点：功能强大；简单方便；容易理解
 - 缺点：PC端兼容性不好，移动端（Android4.0+）
-## 本章小结
-- 对于水平居中，我们应该先考虑，哪些元素有自带的居中效果，最先想到的应该就是$\color{red}{text-align:center}$了，但是这个只对行内内容有效，所以我们要使用 <label style="color:#f88">text-align:center</label>就必须将子元素设置为<label style="color:#f88"> display: inline; </label>或者<label style="color:#f88"> display: inline-block;</label>
-- 其次就是考虑能不能用<label style="color:#f88">margin: 0 auto;</label>，因为这都是一两句代码能搞定的事，实在不行就是用绝对定位去实现了。
-- 移动端能用<label style="color:#f88">flex</label>就用<label style="color:#f88">flex</label>，简单方便，灵活并且功能强大，无愧为网页布局的一大利器！<font face="黑体" color=green size=5>我是黑体，绿色，尺寸为5</font>
+## 小结
+- 对于水平居中，我们应该先考虑，哪些元素有自带的居中效果，最先想到的应该就是 text-align:center 了，但是这个只对行内内容有效，所以我们要使用 text-align:center 就必须将子元素设置为 display: inline; 或者 display: inline-block; ；
+- 其次就是考虑能不能用margin: 0 auto; ，因为这都是一两句代码能搞定的事，实在不行就是用绝对定位去实现了。
+- 移动端能用flex就用flex，简单方便，灵活并且功能强大，无愧为网页布局的一大利器
 
+## 二、垂直居中
+### 2.1 单行文本/行内元素/行内块级元素
+> 原理：line-height的最终表现是通过inline box实现的，而无论inline box所占据的高度是多少（无论比文字大还是比文字小），其占据的空间都是与文字内容公用水平中垂线的。
+```css
+#parent{
+    height: 150px;
+    line-height: 150px;  /*与height等值*/
+}
+```
+- 优点：简单；兼容性好
+- 缺点：只能用于单行行内内容；要知道高度的值
+### 2.2 多行文本/行内元素/行内块级元素 
+> 原理同上
+```css
+#parent{  /*或者用span把所有文字包裹起来，设置display：inline-block转换成图片的方式解决*/
+    height: 150px;
+    line-height: 30px;  /*元素在页面呈现为5行,则line-height的值为height/5*/
+}
+```
+- 优点：简单；兼容性好
+- 缺点：只能用于行内内容；需要知道高度和最终呈现多少行来计算出line-height的值，建议用span包裹多行文本
+### 2.3 图片
+> 原理：[vertical-align和line-height的基友关系](http://www.zhangxinxu.com/wordpress/2015/08/css-deep-understand-vertical-align-and-line-height/).
+```css
+#parent{
+    height: 150px;
+    line-height: 150px;
+    font-size: 0;
+}
+img#son{vertical-align: middle;} /*默认是基线对齐，改为middle*/
+```
+- 优点：简单；兼容性好
+- 缺点：需要添加font-size: 0; 才可以完全的垂直居中；不过需要注意，html#parent包裹img之间需要有换行或空格
+### 2.4 单个块级元素（使用tabel-cell实现）
+> 原理：CSS Table，使表格内容对齐方式为middle
+```css
+#parent{
+    display: table-cell;
+    vertical-align: middle;
+}
+```
+- 优点：简单；宽高不定；兼容性好（ie8+）
+- 缺点：设置tabl-cell的元素，宽度和高度的值设置百分比无效，需要给它的父元素设置display: table; 才生效；table-cell不感知margin，在父元素上设置table-row等属性，也会使其不感知height；设置float或position会对默认布局造成破坏，可以考虑为之增加一个父div定义float等属性；内容溢出时会自动撑开父元素
+### 2.5 单个块级元素（绝对定位）
+> 原理：子绝父相，top、right、bottom、left的值是相对于父元素尺寸的，然后margin或者transform是相对于自身尺寸的，组合使用达到水平居中的目的
+```css
+#parent{
+    height: 150px;
+    position: relative;  /*父相*/
+}
+#son{
+    position: absolute;  /*子绝*/
+    top: 50%;  /*父元素高度一半,这里等同于top:75px;*/
+    transform: translateY(-50%);  /*自身高度一半,这里等同于margin-top:-25px;*/
+    height: 50px;
+}
+```
+- 优点：使用margin-top兼容性好；不管是块级还是行内元素都可以实现
+- 缺点：代码较多；脱离文档流；使用margin-top需要知道高度值；使用transform兼容性不好（ie9+）
+### 2.6 使用flex实现
+> 原理：flex设置对齐方式罢了，请查阅文末flex阅读推荐
+```css
+#parent{
+    display: flex;
+    align-items: center;
+}
+```
+- 优点：简单灵活；功能强大
+- 缺点：PC端兼容性不好，移动端（Android4.0+）
+### 2.7 任意个元素(flex)
+> 原理：flex设置对齐方式罢了，请查阅文末flex阅读推荐
+```css
+#parent{
+    display: flex;
+    align-items: center;
+}
+或
+#parent{
+    display: flex;
+}
+.son{
+    align-self: center;
+}
+或 
+#parent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+```
+- 优点：简单灵活；功能强大
+- 缺点：PC端兼容性不好，移动端（Android4.0+）
+## 小结
+- 对于垂直居中，最先想到的应该就是 line-height 了，但是这个只能用于行内内容；
+-  其次就是考虑能不能用vertical-align: middle; ，不过这个一定要熟知原理才能用得顺手，建议看下[vertical-align和line-height的基友关系](http://www.zhangxinxu.com/wordpress/2015/08/css-deep-understand-vertical-align-and-line-height/)；
+- 然后便是绝对定位，虽然代码多了点，但是胜在适用于不同情况；
+- 移动端兼容性允许的情况下能用flex就用flex
+  
+## 三、水平垂直居中
+### 3.1 行内/行内块级/图片
+> 原理：text-align: center; 控制行内内容相对于块父元素水平居中,然后就是line-height和vertical-align的基友关系使其垂直居中，font-size: 0; 是为了消除近似居中的bug
+```css
+#parent{
+    height: 150px;
+    line-height: 150px;  /*行高的值与height相等*/
+    text-align: center;
+    font-size: 0;   /*消除幽灵空白节点的bug*/
+}
+#son{
+    /*display: inline-block;*/  /*如果是块级元素需改为行内或行内块级才生效*/
+    vertical-align: middle;
+}
+```
+- 优点：代码简单；兼容性好（ie8+）
+- 缺点：只对行内内容有效；需要添加font-size: 0; 才可以完全的垂直居中；不过需要注意html中#parent包裹#son之间需要有换行或空格；熟悉line-height和vertical-align的基友关系较难
