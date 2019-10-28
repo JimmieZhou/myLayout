@@ -4,7 +4,7 @@
  * @Author: jimmiezhou
  * @Date: 2019-10-28 11:33:21
  * @LastEditors: jimmiezhou
- * @LastEditTime: 2019-10-28 14:56:34
+ * @LastEditTime: 2019-10-28 15:05:49
  -->
 # myLayout
 最近闲来无事，决定将页面布局这块东西做一个总结。前面三节都是比较简单的parent+son的页面结构，所以就不贴代码了，自行补脑吧。
@@ -417,6 +417,7 @@ html:
 }
 ```
 ## 五、三列布局
+### 5.1 两列定宽，一列自适应
 html:
 ```html
 <body>
@@ -427,7 +428,7 @@ html:
 </div>
 </body>
 ```
-### 5.1使用float+margin实现
+#### 5.1.1 使用float+margin实现
 ```css
 #parent{
     min-width: 310px; /*100+10+200,防止宽度不够,子元素换行*/
@@ -451,3 +452,130 @@ html:
     background-color: #0f0;
 }
 ```
+#### 5.1.2 使用float+overflow实现
+```css
+#parent{
+    min-width: 320px; /*100+10+200+20,防止宽度不够,子元素换行*/
+}
+#left {
+    margin-right: 10px; /*间隔*/
+    float: left;
+    width: 100px;
+    height: 500px;
+    background-color: #f00;
+}
+#center{
+    margin-right: 10px; /*在此定义和#right的间隔*/
+    float: left;
+    width: 200px;
+    height: 500px;
+    background-color: #eeff2b;
+}
+#right {
+    overflow: hidden;  /*触发bfc*/
+    height: 500px;
+    background-color: #0f0;
+}
+```
+#### 5.1.3 使用flex实现
+```css
+#parent {
+    height: 500px;
+    display: flex;
+}
+#left {
+    margin-right: 10px;  /*间距*/
+    width: 100px;
+    background-color: #f00;
+}
+#center {
+    margin-right: 10px;  /*间距*/
+    width: 200px;
+    background-color: #eeff2b;
+}
+#right {
+    flex: 1;  /*均分#parent剩余的部分达到自适应*/
+    background-color: #0f0;
+}
+```
+#### 5.1.4 使用Grid实现
+```css
+#parent {
+    height: 500px;
+    display: grid;
+    grid-template-columns: 100px 200px auto; /*设置3列,固定第一第二列的宽度,第三列auto或者1fr*/
+}
+#left {
+    margin-right: 10px;  /*间距*/
+    background-color: #f00;
+}
+#center {
+    margin-right: 10px;  /*间距*/
+    background-color: #eeff2b;
+}
+#right {
+    background-color: #0f0;
+}
+```
+### 5.2 两侧定宽,中间自适应
+html:
+```html
+<body>
+<div id="parent">
+    <div id="left">左列定宽</div>
+    <div id="center">中间自适应</div>
+    <div id="right">右列定宽</div>
+</div>
+</body>
+```
+#### 5.2.1 flex布局方法
+```css
+#parent {
+    height: 500px;
+    display: flex;
+}
+#left {
+    width: 100px;
+    background-color: #f00;
+}
+#center {
+    flex: 1;  /*均分#parent剩余的部分*/
+    background-color: #eeff2b;
+}
+#right {
+    width: 200px;
+    background-color: #0f0;
+}
+```
+#### 5.2.2 绝对定位
+```css
+#parent {
+    position: relative; /*子绝父相*/
+}
+#left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 500px;
+    background-color: #f00;
+}
+#center {
+    height: 500px;
+    margin-left: 100px; /*大于等于#left的宽度,或者给#parent添加同样大小的padding-left*/
+    margin-right: 200px;  /*大于等于#right的宽度,或者给#parent添加同样大小的padding-right*/
+    background-color: #eeff2b;
+}
+#right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 500px;
+    background-color: #0f0;
+}
+```
+
+
+
+
