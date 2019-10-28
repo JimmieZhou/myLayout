@@ -4,7 +4,7 @@
  * @Author: jimmiezhou
  * @Date: 2019-10-28 11:33:21
  * @LastEditors: jimmiezhou
- * @LastEditTime: 2019-10-28 13:51:47
+ * @LastEditTime: 2019-10-28 13:55:31
  -->
 # myLayout
 最近闲来无事，决定将页面布局这块东西做一个总结。前面三节都是比较简单的parent+son的页面结构，所以就不贴代码了，自行补脑吧。
@@ -72,7 +72,7 @@
 - 优点：功能强大；简单方便；容易理解
 - 缺点：PC端兼容性不好，移动端（Android4.0+）
 ## 本章小结
-- 对于水平居中，我们应该先考虑，哪些元素有自带的居中效果，最先想到的应该就是<label style="color:#f88">text-align:center</label>了，但是这个只对行内内容有效，所以我们要使用 <label style="color:#f88">text-align:center</label>就必须将子元素设置为<label style="color:#f88"> display: inline; </label>或者<label style="color:#f88"> display: inline-block;</label>
+- 对于水平居中，我们应该先考虑，哪些元素有自带的居中效果，最先想到的应该就是$\color{red}{text-align:center}$了，但是这个只对行内内容有效，所以我们要使用 <label style="color:#f88">text-align:center</label>就必须将子元素设置为<label style="color:#f88"> display: inline; </label>或者<label style="color:#f88"> display: inline-block;</label>
 - 其次就是考虑能不能用<label style="color:#f88">margin: 0 auto;</label>，因为这都是一两句代码能搞定的事，实在不行就是用绝对定位去实现了。
 - 移动端能用<label style="color:#f88">flex</label>就用<label style="color:#f88">flex</label>，简单方便，灵活并且功能强大，无愧为网页布局的一大利器！
 
